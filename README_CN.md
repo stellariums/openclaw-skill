@@ -1,5 +1,9 @@
 # OpenClaw Agent Skill 🦞
 
+[![Release](https://img.shields.io/github/v/release/stellariums/openclaw-skill)](https://github.com/stellariums/openclaw-skill/releases)
+[![License](https://img.shields.io/github/license/stellariums/openclaw-skill)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/stellariums/openclaw-skill?style=social)](https://github.com/stellariums/openclaw-skill/stargazers)
+
 [English](README.md) | 中文文档
 
 一套完整的 **Agent Skill**，用于安装、配置、运维和排障 [OpenClaw](https://github.com/openclaw/openclaw) —— 一个自托管的多通道 AI Agent 网关。

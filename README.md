@@ -1,5 +1,9 @@
 # OpenClaw Agent Skill 🦞
 
+[![Release](https://img.shields.io/github/v/release/stellariums/openclaw-skill)](https://github.com/stellariums/openclaw-skill/releases)
+[![License](https://img.shields.io/github/license/stellariums/openclaw-skill)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/stellariums/openclaw-skill?style=social)](https://github.com/stellariums/openclaw-skill/stargazers)
+
 [中文文档](README_CN.md) | English
 
 A comprehensive **Agent Skill** for installing, configuring, operating, and troubleshooting [OpenClaw](https://github.com/openclaw/openclaw) — a self-hosted, multi-channel AI agent gateway.
