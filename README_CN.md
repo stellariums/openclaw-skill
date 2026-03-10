@@ -41,23 +41,37 @@ OpenClaw-Skill/
 
 ## 安装方法
 
-### Antigravity（Claude）用户
+### 下载这个 Skill
 
-将 Skill 文件夹复制到 Antigravity 的 skills 目录：
+你可以任选一种方式获取：
+
+1. 直接克隆仓库：
 
 ```bash
-# 克隆仓库
-git clone https://github.com/win4r/OpenClaw-Skill.git
-
-# 复制到 skills 目录
-cp -r OpenClaw-Skill ~/.gemini/antigravity/skills/openclaw
+git clone https://github.com/stellariums/openclaw-skill.git
 ```
+
+2. 从 GitHub 下载 ZIP：
+
+- 打开 `https://github.com/stellariums/openclaw-skill`
+- 点击 `Code` → `Download ZIP`
+- 解压到本地
+
+### Antigravity（Claude）用户
+
+将下载后的文件夹复制到 Antigravity 的 skills 目录；如果目录名不同，建议改成 `openclaw`：
+
+```bash
+cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw
+```
+
+在 Windows 上，也可以手动复制到 `%USERPROFILE%\.gemini\antigravity\skills\openclaw`。
 
 安装后，当你提到 OpenClaw 相关任务时，Skill 会自动触发。
 
 ### 其他 AI 助手
 
-`SKILL.md` 和 `references/` 中的结构化文档可以适配到任何支持 Skill/知识注入的 AI 助手。
+也可以用同样的下载方式获取本仓库，然后复用 `SKILL.md` 和 `references/`，适配任何支持 Skill 或知识注入的 AI 助手。
 
 ## 使用示例
 

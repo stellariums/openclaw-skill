@@ -41,23 +41,37 @@ OpenClaw-Skill/
 
 ## Installation
 
-### For Antigravity (Claude)
+### Download This Skill
 
-Copy the skill folder to your Antigravity skills directory:
+Choose whichever is easiest:
+
+1. Clone the repository:
 
 ```bash
-# Clone this repo
-git clone https://github.com/win4r/OpenClaw-Skill.git
-
-# Copy to your skills directory
-cp -r OpenClaw-Skill ~/.gemini/antigravity/skills/openclaw
+git clone https://github.com/stellariums/openclaw-skill.git
 ```
+
+2. Download a ZIP archive from GitHub:
+
+- Open `https://github.com/stellariums/openclaw-skill`
+- Click `Code` → `Download ZIP`
+- Extract it locally
+
+### For Antigravity (Claude)
+
+Copy the downloaded folder to your Antigravity skills directory. If needed, rename the folder to `openclaw`:
+
+```bash
+cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw
+```
+
+On Windows, you can also copy the folder manually to `%USERPROFILE%\.gemini\antigravity\skills\openclaw`.
 
 The skill will be automatically detected and triggered when you ask about OpenClaw-related tasks.
 
 ### For Other AI Assistants
 
-The `SKILL.md` and `references/` files contain structured documentation that can be adapted for any AI assistant that supports skill/knowledge injection.
+You can download this repository the same way, then reuse `SKILL.md` and `references/` in any assistant that supports skill or knowledge injection.
 
 ## Usage Examples
 
