@@ -57,6 +57,51 @@ git clone https://github.com/stellariums/openclaw-skill.git
 - 点击 `Code` → `Download ZIP`
 - 解压到本地
 
+### Codex 用户
+
+最方便的方式，是直接把仓库克隆到 Codex 的 skills 目录：
+
+```bash
+# macOS / Linux
+git clone https://github.com/stellariums/openclaw-skill.git ~/.codex/skills/openclaw
+```
+
+```powershell
+# Windows PowerShell
+git clone https://github.com/stellariums/openclaw-skill.git "$env:USERPROFILE\.codex\skills\openclaw"
+```
+
+安装后重启 Codex，让新 skill 被加载。
+
+如果你下载的是 ZIP，也可以解压后手动复制到 `~/.codex/skills/openclaw` 或 `%USERPROFILE%\.codex\skills\openclaw`。
+
+### Claude Code 用户
+
+根据 Anthropic 当前文档，Claude Code 没有公开的原生 `skills/` 目录；最接近的内置方式是用户级 subagent，也就是 `~/.claude/agents/`。
+
+最方便的方式，是直接在 Claude Code 里运行 `/agents`，创建一个用户级 `openclaw` subagent，并让它使用这个仓库。
+
+如果你更偏好文件方式，也可以这样安装：
+
+```bash
+# macOS / Linux
+git clone https://github.com/stellariums/openclaw-skill.git ~/.claude/openclaw-skill
+mkdir -p ~/.claude/agents
+cat > ~/.claude/agents/openclaw.md <<'EOF'
+---
+name: openclaw
+description: Use the OpenClaw skill repository to diagnose, configure, and troubleshoot OpenClaw.
+---
+
+Use `~/.claude/openclaw-skill/SKILL.md` as the primary workflow.
+Open only the needed files under `~/.claude/openclaw-skill/references/`.
+EOF
+```
+
+在 Windows 上，可以把仓库克隆到 `%USERPROFILE%\.claude\openclaw-skill`，然后按同样内容创建 `%USERPROFILE%\.claude\agents\openclaw.md`。
+
+完成后，你可以直接在 Claude Code 里让它使用 `openclaw` subagent 来处理 OpenClaw 相关任务。
+
 ### Antigravity（Claude）用户
 
 将下载后的文件夹复制到 Antigravity 的 skills 目录；如果目录名不同，建议改成 `openclaw`：

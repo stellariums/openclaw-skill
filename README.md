@@ -57,6 +57,51 @@ git clone https://github.com/stellariums/openclaw-skill.git
 - Click `Code` → `Download ZIP`
 - Extract it locally
 
+### For Codex
+
+The fastest option is to clone the repo directly into your Codex skills directory:
+
+```bash
+# macOS / Linux
+git clone https://github.com/stellariums/openclaw-skill.git ~/.codex/skills/openclaw
+```
+
+```powershell
+# Windows PowerShell
+git clone https://github.com/stellariums/openclaw-skill.git "$env:USERPROFILE\.codex\skills\openclaw"
+```
+
+Restart Codex after installing so the new skill is loaded.
+
+If you downloaded a ZIP instead, extract it and copy the folder to `~/.codex/skills/openclaw` or `%USERPROFILE%\.codex\skills\openclaw`.
+
+### For Claude Code
+
+Based on Anthropic's current docs, Claude Code does not expose a native `skills/` directory. The closest built-in equivalent is a personal subagent in `~/.claude/agents/`.
+
+The easiest option is to run `/agents` inside Claude Code and create a user-level `openclaw` subagent that points to this repository.
+
+If you prefer files, a practical setup is:
+
+```bash
+# macOS / Linux
+git clone https://github.com/stellariums/openclaw-skill.git ~/.claude/openclaw-skill
+mkdir -p ~/.claude/agents
+cat > ~/.claude/agents/openclaw.md <<'EOF'
+---
+name: openclaw
+description: Use the OpenClaw skill repository to diagnose, configure, and troubleshoot OpenClaw.
+---
+
+Use `~/.claude/openclaw-skill/SKILL.md` as the primary workflow.
+Open only the needed files under `~/.claude/openclaw-skill/references/`.
+EOF
+```
+
+On Windows, clone the repo to `%USERPROFILE%\.claude\openclaw-skill`, then create `%USERPROFILE%\.claude\agents\openclaw.md` with the same content.
+
+After that, you can ask Claude Code to use the `openclaw` subagent for OpenClaw-related work.
+
 ### For Antigravity (Claude)
 
 Copy the downloaded folder to your Antigravity skills directory. If needed, rename the folder to `openclaw`:
