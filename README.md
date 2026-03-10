@@ -6,27 +6,38 @@
 
 [中文文档](README_CN.md) | English
 
-A comprehensive **Agent Skill** for installing, configuring, operating, and troubleshooting [OpenClaw](https://github.com/openclaw/openclaw) — a self-hosted, multi-channel AI agent gateway.
+A production-ready **Agent Skill** that turns Codex, Claude Code, Antigravity, or other AI assistants into a focused OpenClaw operator.
 
-## What is This?
+> Install once, then ask your assistant to diagnose, configure, secure, and maintain a local OpenClaw deployment with much better context.
 
-This is an Agent Skill designed for AI coding assistants (like Claude with Antigravity). Once installed, the AI assistant gains deep knowledge of OpenClaw and can help you with:
+## Why This Skill
 
-- 🔧 **Installation & Updates** — Install, upgrade, or migrate OpenClaw
-- ⚙️ **Configuration** — Edit `openclaw.json`, set up models, manage secrets
-- 📡 **Channel Management** — Set up WhatsApp, Telegram, Discord, Slack, iMessage, and 15+ other channels
-- 🚀 **Gateway Operations** — Start, stop, restart, health check, remote access
-- 🤖 **Multi-Agent Routing** — Configure multiple agents with isolated workspaces and sessions
-- 🔒 **Security Hardening** — Audit, lock down access, manage tokens and secrets
-- 🔍 **Troubleshooting** — Diagnose and fix common errors from CLI and Gateway
+- **Operationally focused** — tuned for real OpenClaw maintenance, not generic Q&A
+- **Broad coverage** — channels, model providers, Gateway ops, multi-agent routing, secrets, sandboxing, and security
+- **Practical outputs** — optimized for step-by-step diagnosis, config edits, recovery, and verification
 
-### Recently Synced Release Changes
+## Best For
 
-This skill now reflects the key stable OpenClaw changes from early March 2026, especially:
+- Running or upgrading a self-hosted OpenClaw instance
+- Adding new channels, providers, or agent routing rules
+- Troubleshooting startup failures, auth errors, broken bindings, and unhealthy Gateway behavior
+- Giving AI assistants a reusable OpenClaw knowledge pack instead of re-explaining docs each time
 
-- `v2026.3.8`: `backup create/verify`, `talk.silenceTimeoutMs`, Brave `llm-context`, `openclaw acp --provenance`, `gateway.remote.token`.
-- `v2026.3.7`: ContextEngine plugin slot, persistent ACP channel/topic bindings, Telegram topic-level routing, SecretRef support for `gateway.auth.token`, `messages.tts.openai.baseUrl`.
-- `v2026.3.2`: `openclaw config validate`, broader SecretRef coverage, first-class `pdf` tool, inline `sessions_spawn` attachments.
+## Example Prompts
+
+- `Help me diagnose my local OpenClaw setup`
+- `Set up a Telegram bot for OpenClaw`
+- `Why is my Gateway not responding?`
+- `Lock down my OpenClaw security configuration`
+- `Add a second agent for work with isolated workspace`
+
+### Synced Release Coverage
+
+This skill currently reflects the key stable OpenClaw changes from early March 2026, especially:
+
+- `v2026.3.8`: `backup create/verify`, `talk.silenceTimeoutMs`, Brave `llm-context`, `openclaw acp --provenance`, `gateway.remote.token`
+- `v2026.3.7`: ContextEngine plugin slot, persistent ACP channel/topic bindings, Telegram topic-level routing, SecretRef support for `gateway.auth.token`, `messages.tts.openai.baseUrl`
+- `v2026.3.2`: `openclaw config validate`, broader SecretRef coverage, first-class `pdf` tool, inline `sessions_spawn` attachments
 
 ## Skill Structure
 

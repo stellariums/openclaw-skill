@@ -6,27 +6,38 @@
 
 [English](README.md) | 中文文档
 
-一套完整的 **Agent Skill**，用于安装、配置、运维和排障 [OpenClaw](https://github.com/openclaw/openclaw) —— 一个自托管的多通道 AI Agent 网关。
+一个偏生产可用的 **Agent Skill**，可以把 Codex、Claude Code、Antigravity 或其他 AI 助手，变成更懂 OpenClaw 的运维助手。
 
-## 这是什么？
+> 安装一次后，你就可以直接让助手用更完整的上下文，去诊断、配置、加固和维护本地 OpenClaw 部署。
 
-这是一个专为 AI 编程助手（如 Claude + Antigravity）设计的 Agent Skill。安装后，AI 助手会获得 OpenClaw 的深度知识，能帮你完成：
+## 为什么值得装
 
-- 🔧 **安装与升级** — 安装、升级或迁移 OpenClaw
-- ⚙️ **配置管理** — 编辑 `openclaw.json`、设置模型、管理密钥
-- 📡 **频道管理** — 配置 WhatsApp、Telegram、Discord、Slack、iMessage 等 20+ 频道
-- 🚀 **Gateway 运维** — 启动、停止、重启、健康检查、远程访问
-- 🤖 **多 Agent 路由** — 配置多个 Agent，隔离工作区和会话
-- 🔒 **安全加固** — 审计、访问控制、Token 和密钥管理
-- 🔍 **故障排查** — 诊断和修复 CLI 及 Gateway 的常见错误
+- **偏运维实战** — 重点不是泛泛问答，而是 OpenClaw 的真实维护场景
+- **覆盖面完整** — 包括频道、模型提供商、Gateway 运维、多 Agent 路由、Secrets、Sandbox 与安全
+- **输出更可执行** — 更适合分步骤排查、修改配置、恢复服务和做结果验证
 
-### 最近同步的版本更新
+## 适合什么场景
 
-目前这套 Skill 已同步到 2026 年 3 月上旬的关键稳定版本变更，重点包括：
+- 运行、升级或迁移自托管 OpenClaw
+- 新增频道、模型提供商或 Agent 路由规则
+- 排查启动失败、鉴权错误、绑定失效、Gateway 不健康等问题
+- 给 AI 助手装一套可复用的 OpenClaw 知识包，而不是每次都重讲文档
 
-- `v2026.3.8`：`backup create/verify`、`talk.silenceTimeoutMs`、Brave `llm-context`、`acp --provenance`、`gateway.remote.token`。
-- `v2026.3.7`：ContextEngine 插件槽、ACP 持久化频道/话题绑定、Telegram topic 级路由、`gateway.auth.token` 的 SecretRef 支持、`messages.tts.openai.baseUrl`。
-- `v2026.3.2`：`openclaw config validate`、更广泛的 SecretRef 覆盖、一等公民 `pdf` 工具、`sessions_spawn` 内联附件。
+## 可以直接怎么问
+
+- `Help me diagnose my local OpenClaw setup`
+- `检查我的 OpenClaw 配置是否有问题`
+- `Set up a Telegram bot for OpenClaw`
+- `Why is my Gateway not responding?`
+- `加固我的 OpenClaw 安全配置`
+
+### 同步的版本范围
+
+目前这套 Skill 已覆盖 2026 年 3 月上旬的关键稳定版本变更，重点包括：
+
+- `v2026.3.8`：`backup create/verify`、`talk.silenceTimeoutMs`、Brave `llm-context`、`acp --provenance`、`gateway.remote.token`
+- `v2026.3.7`：ContextEngine 插件槽、ACP 持久化频道/话题绑定、Telegram topic 级路由、`gateway.auth.token` 的 SecretRef 支持、`messages.tts.openai.baseUrl`
+- `v2026.3.2`：`openclaw config validate`、更广泛的 SecretRef 覆盖、一等公民 `pdf` 工具、`sessions_spawn` 内联附件
 
 ## Skill 结构
 
