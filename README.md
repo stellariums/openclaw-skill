@@ -39,6 +39,24 @@ OpenClaw-Skill/
 
 **Total: ~1,400 lines** of structured reference covering all core OpenClaw functionality.
 
+## Quick Install
+
+If you already know which assistant you use, start here:
+
+- `Codex`: `git clone https://github.com/stellariums/openclaw-skill.git ~/.codex/skills/openclaw`
+- `Claude Code`: clone the repo, then create an `openclaw` subagent with `/agents`
+- `Antigravity`: `cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw`
+
+### Verify Installation
+
+After installing, try one of these prompts:
+
+- `Help me diagnose my local OpenClaw setup`
+- `检查我的 OpenClaw 配置是否有问题`
+- `Use the openclaw skill to troubleshoot Gateway startup`
+
+If the assistant starts using `SKILL.md`, the installation worked.
+
 ## Installation
 
 ### Download This Skill
