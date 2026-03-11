@@ -39,6 +39,13 @@ This skill currently reflects the key stable OpenClaw changes from early March 2
 - `v2026.3.7`: ContextEngine plugin slot, persistent ACP channel/topic bindings, Telegram topic-level routing, SecretRef support for `gateway.auth.token`, `messages.tts.openai.baseUrl`
 - `v2026.3.2`: `openclaw config validate`, broader SecretRef coverage, first-class `pdf` tool, inline `sessions_spawn` attachments
 
+It also covers the most important February 2026 additions:
+
+- `v2026.2.26`: first-class `openclaw secrets` workflow and `openclaw agents bindings|bind|unbind`
+- `v2026.2.25`: `agents.defaults.heartbeat.directPolicy` and the reverted default direct-heartbeat behavior
+- `v2026.2.6`: xAI / Grok, Voyage AI, `claude-opus-4-6`, and `openai-codex/gpt-5.3-codex`
+- `v2026.2.2`: `agents.defaults.subagents.thinking`
+
 ## Skill Structure
 
 ```

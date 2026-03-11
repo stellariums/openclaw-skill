@@ -39,6 +39,13 @@
 - `v2026.3.7`：ContextEngine 插件槽、ACP 持久化频道/话题绑定、Telegram topic 级路由、`gateway.auth.token` 的 SecretRef 支持、`messages.tts.openai.baseUrl`
 - `v2026.3.2`：`openclaw config validate`、更广泛的 SecretRef 覆盖、一等公民 `pdf` 工具、`sessions_spawn` 内联附件
 
+也覆盖 2026 年 2 月最值得关注的几个新增点：
+
+- `v2026.2.26`：一等公民的 `openclaw secrets` 工作流，以及 `openclaw agents bindings|bind|unbind`
+- `v2026.2.25`：`agents.defaults.heartbeat.directPolicy` 与恢复为默认允许的 direct heartbeat 行为
+- `v2026.2.6`：xAI / Grok、Voyage AI、`claude-opus-4-6`、`openai-codex/gpt-5.3-codex`
+- `v2026.2.2`：`agents.defaults.subagents.thinking`
+
 ## Skill 结构
 
 ```
