@@ -123,6 +123,7 @@ Telegram user IDs are numeric. Find yours:
 | `TypeError: fetch failed` | Network error | Recoverable — OpenClaw retries. If persistent, use proxy |
 | IPv6 connectivity issues | Intermittent failures | Set `OPENCLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY=1` |
 | Allowlist with `@username` not working | Username mismatch | Use numeric ID, not `@username`. Run `openclaw doctor --fix` |
+| `dmPolicy: "allowlist"` but DMs still drop after upgrade | Empty / stale effective allowlist | Check account + parent `allowFrom`, run `openclaw doctor --fix`, and restore pairing-store-derived allowlist entries if needed |
 | Telegram topic routes wrong agent after restart | Topic binding missing or stale | Re-check ACP/topic binding persistence and re-bind the current topic before debugging core routing |
 | Telegram voice note ignored in groups | Mention preflight blocked on audio transcript | Review `disableAudioPreflight` and group/topic mention rules |
 | DM/topic previews behave differently than expected | Streaming mode mismatch | Check `channels.telegram.streaming` (`partial` is the newer default for fresh installs) |
@@ -136,6 +137,7 @@ For VPS with unstable egress:
   channels: {
     telegram: {
       proxy: "socks5://user:pass@proxy-host:1080",
+      webhookPort: 0, // Optional ephemeral local port in webhook mode
     },
   },
 }

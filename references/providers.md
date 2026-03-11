@@ -28,6 +28,7 @@ openclaw models set anthropic/claude-sonnet-4-5
 |---|---|---|
 | Anthropic | `anthropic/claude-*` | API key or OAuth |
 | OpenAI | `openai/gpt-*` | API key or Codex OAuth |
+| xAI (Grok) | `xai/grok-*` | API key |
 | Venice AI | `venice/llama-*`, `venice/claude-*` | API key |
 | OpenRouter | `openrouter/*` | API key |
 | Google (Gemini) | `google/*` | API key |
@@ -49,6 +50,12 @@ openclaw models set anthropic/claude-sonnet-4-5
 | Google Gemini Flash-Lite | `google/gemini-3.1-flash-lite-preview` | API key |
 | Qianfan | `qianfan/*` | API key |
 | OpenCode Zen | `opencode/*` | API key |
+
+### Memory / Embedding Providers
+
+| Provider | Use |
+|---|---|
+| Voyage AI | Native memory / embeddings provider in newer releases |
 
 ### Local Providers
 
@@ -121,6 +128,9 @@ openclaw models auth order get|set|clear  # Auth profile priority
 - For custom/self-hosted providers, see Configuration Reference → Custom providers
 
 Recent provider notes:
+- `anthropic/claude-opus-4-6` and `openai-codex/gpt-5.3-codex` gained forward-compat support in `v2026.2.6`; use the canonical provider/model ref when the user wants the newer IDs explicitly.
+- xAI / Grok support landed in `v2026.2.6`, so `xai/grok-*` is a valid provider family for newer setups.
+- Voyage AI is a memory / embeddings surface, not a replacement for the primary chat-model provider.
 - `messages.tts.openai.baseUrl` lets OpenClaw route TTS requests to OpenAI-compatible endpoints without changing the default chat provider setup.
 - MiniMax keeps `MiniMax-M2.5-highspeed` as the supported fast tier; avoid depending on removed `MiniMax-M2.5-Lightning` in new configs.
 - `google/gemini-3.1-flash-lite-preview` is a useful lightweight Gemini option in newer releases.

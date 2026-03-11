@@ -30,6 +30,9 @@ Each agent has:
 openclaw agents add <id>            # Create new agent
 openclaw agents list                # List agents
 openclaw agents list --bindings     # Show agent-channel bindings
+openclaw agents bindings            # Show resolved account-scoped bindings
+openclaw agents bind                # Add/update a binding via CLI
+openclaw agents unbind              # Remove a binding via CLI
 openclaw agents delete <id>         # Remove agent
 ```
 
@@ -137,6 +140,7 @@ Operational guidance:
 - Treat ACP binding storage as persistent configuration, not ephemeral session state.
 - In Telegram ACP flows, `--thread here` and `--thread auto` are the important thread-binding modes.
 - When one forum topic should map to a different agent, prefer a topic-level binding or topic-level `agentId` override instead of splitting the whole account.
+- In `v2026.2.26`, `openclaw agents bindings|bind|unbind` became the preferred operational surface for account-scoped route changes; use it when a user wants to repair or migrate live bindings without editing JSON by hand.
 
 If routing breaks after a restart, re-check binding persistence first before assuming the agent runtime lost context.
 
@@ -148,6 +152,7 @@ Each agent can override:
 - Sandbox settings
 - Group chat mention patterns
 - Heartbeat settings
+- Subagent thinking level
 
 ```json5
 {
@@ -162,6 +167,12 @@ Each agent can override:
       },
       groupChat: {
         mentionPatterns: ["@support"],
+      },
+      heartbeat: {
+        directPolicy: "block",   // "allow" | "block"
+      },
+      subagents: {
+        thinking: "medium",      // Default subagent thinking level
       },
     }],
   },

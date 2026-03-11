@@ -43,6 +43,32 @@ Keep these v2026.3.2 additions in mind when the user is validating config, worki
 - `sessions_spawn` supports inline attachments in subagent runtime, which matters when a workflow needs to hand files directly to a spawned session.
 - New Telegram installs default to partial streaming, so preview behavior is expected unless operators explicitly disable it.
 
+## Release Focus (v2026.2.26)
+
+Keep these late-February changes in mind when the user is dealing with secrets, ACP thread sessions, or agent routing operations:
+
+- `openclaw secrets` is now a first-class workflow: `audit`, `configure`, `apply`, and `reload` should be treated as the standard path for migrating away from plaintext secrets.
+- ACP thread-bound agents are first-class runtimes now; when a thread-scoped ACP flow misbehaves, debug ACP runtime lifecycle and thread dispatch instead of assuming it is just a transient reply bug.
+- `openclaw agents bindings`, `openclaw agents bind`, and `openclaw agents unbind` exist for account-scoped route management; prefer these commands over hand-editing bindings when the user wants to adjust live channel/account routing.
+- `openai-codex` transport is WebSocket-first by default with SSE fallback, so transport changes around Codex models are expected in late-February installs.
+
+## Release Focus (v2026.2.25)
+
+Keep these mid-February operational changes in mind when diagnosing heartbeats, onboarding expectations, or DM delivery:
+
+- `agents.defaults.heartbeat.directPolicy` replaces the older heartbeat DM toggle, and the default direct-policy behavior reverted to `allow`.
+- To preserve older DM-blocked heartbeat behavior from `v2026.2.24`, explicitly set `agents.defaults.heartbeat.directPolicy: "block"` or a per-agent override.
+- OpenClaw onboarding docs now treat the product as personal-by-default; shared or multi-user deployments should be assumed to need explicit hardening, auth, and approval review.
+
+## Release Focus (v2026.2.6 / v2026.2.2)
+
+The first February stable releases added a few provider and agent surfaces that are still relevant in current maintenance work:
+
+- Anthropic `claude-opus-4-6` and OpenAI Codex `openai-codex/gpt-5.3-codex` gained forward-compat support in `v2026.2.6`.
+- xAI / Grok model-provider support landed in `v2026.2.6`.
+- Voyage AI support landed as a native memory provider in `v2026.2.6`; treat it as an embeddings / memory surface rather than a primary chat model.
+- `agents.defaults.subagents.thinking` (and per-agent `subagents.thinking`) landed in `v2026.2.2`, so subagent thinking level can now be configured instead of inferred ad hoc.
+
 ## Reference Files
 
 | Reference | Coverage |
@@ -98,6 +124,9 @@ openclaw logs --follow             # Tail gateway logs
 openclaw channels status --probe   # Channel health check
 openclaw security audit            # Security posture check
 openclaw security audit --fix      # Auto-fix security issues
+openclaw agents bindings           # Show resolved agent bindings
+openclaw agents bind               # Add/update an agent binding
+openclaw agents unbind             # Remove an agent binding
 openclaw --version                 # Version (+ short git hash when available)
 ```
 
@@ -287,12 +316,17 @@ For detailed multi-agent config, see [references/multi_agent.md](references/mult
 ```bash
 openclaw agents add <id>                # Create agent
 openclaw agents list --bindings         # Show agent-channel bindings
+openclaw agents bindings                # Show resolved account-scoped bindings
+openclaw agents bind                    # Add/update account-scoped bindings
+openclaw agents unbind                  # Remove account-scoped bindings
 openclaw agents delete <id>             # Remove agent
 ```
 
 If the user launches the TUI from inside a configured agent workspace, v2026.3.8 now infers that agent automatically. Keep using explicit `agent:` session targets when the user needs to override workspace-based inference.
 
 v2026.3.7 also makes ACP thread/channel bindings durable across restarts and adds topic-level agent routing for Telegram forum or DM topics. When a user reports that one topic should map to a different agent, treat topic bindings and per-topic agent overrides as first-class options.
+
+In `v2026.2.26`, binding management also became a first-class CLI workflow via `openclaw agents bindings|bind|unbind`. Prefer that route when the user wants to promote a channel-only route into an account-scoped route, clean up stale bindings, or avoid hand-editing config during a live routing incident.
 
 When debugging plugin-driven context behavior, check whether a ContextEngine plugin is configured before assuming core compaction is at fault.
 

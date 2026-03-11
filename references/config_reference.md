@@ -25,6 +25,11 @@ Path: `~/.openclaw/openclaw.json` (JSON5 format)
 
 Override via `OPENCLAW_CONFIG_PATH` env var.
 
+Practical config path order:
+1. `OPENCLAW_CONFIG_PATH`
+2. `~/.openclaw/openclaw.json`
+3. Platform-specific bootstrap / onboarding fallbacks (if the primary file has not been created yet)
+
 ## Gateway Section
 
 ```json5
@@ -174,6 +179,10 @@ Override via `OPENCLAW_CONFIG_PATH` env var.
       imageMaxDimensionPx: 1200,  // Image downscaling (reduces vision-token usage)
       heartbeat: {
         every: "30m",
+        directPolicy: "allow",  // "allow" | "block" (v2026.2.25; default reverted to allow)
+      },
+      subagents: {
+        thinking: "medium",     // Default subagent thinking level (v2026.2.2)
       },
       compaction: { ... },
       contextPruning: { ... },
@@ -284,6 +293,9 @@ Override via `OPENCLAW_CONFIG_PATH` env var.
 - `peer.kind` — `"direct"` or `"group"`
 - `peer.id` — specific sender/group ID
 
+Operational note:
+- In newer releases, account-scoped bindings can also be managed through `openclaw agents bindings`, `openclaw agents bind`, and `openclaw agents unbind` instead of hand-editing this block.
+
 ## Secrets Section
 
 See [references/secrets.md](secrets.md) for full details.
@@ -294,6 +306,8 @@ See [references/secrets.md](secrets.md) for full details.
 {
   env: {
     OPENROUTER_API_KEY: "sk-or-...",
+    OPENROUTER_HTTP_REFERER: "https://your-app.example",
+    OPENROUTER_X_TITLE: "OpenClaw Gateway",
     vars: { GROQ_API_KEY: "gsk-..." },
     shellEnv: {
       enabled: true,           // Import shell env
@@ -302,6 +316,8 @@ See [references/secrets.md](secrets.md) for full details.
   },
 }
 ```
+
+- Use OpenRouter attribution headers when the upstream provider expects app identification in addition to the API key.
 
 ## Browser Section
 

@@ -109,6 +109,8 @@ Recent Telegram notes:
 - New installs default `channels.telegram.streaming` to `partial`, so live preview behavior is expected unless you explicitly disable or change it.
 - Forum topics and DM topics can now route to dedicated agent sessions; use topic-level routing when one chat space needs isolated state per topic.
 - For inbound voice notes in groups/topics, `disableAudioPreflight` can skip pre-transcription mention checks when operators want text-only mention gating.
+- In webhook mode, `channels.telegram.webhookPort: 0` is valid for ephemeral local listener binding in newer releases.
+- For `dmPolicy: "allowlist"`, newer releases enforce effective allowlist inheritance more strictly; empty `allowFrom` should be treated as invalid, not silently permissive.
 
 ## Discord
 
