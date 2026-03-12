@@ -7,6 +7,19 @@ description: Comprehensive guide for installing, configuring, operating, and tro
 
 OpenClaw is a self-hosted, open-source (MIT) gateway that routes AI agents across WhatsApp, Telegram, Discord, Slack, iMessage, Signal, and 15+ other channels simultaneously. It runs on macOS, Linux, or Windows.
 
+## Release Focus (v2026.3.11)
+
+Prioritize these newer surfaces when the user is updating or troubleshooting a current OpenClaw deployment:
+
+- `v2026.3.11` is the next stable release after `v2026.3.8`; `v2026.3.10` and `v2026.3.9` do not exist on the GitHub releases page.
+- Gateway/WebSocket now enforces browser origin validation for browser-originated connections even in trusted-proxy mode; if a reverse-proxied Control UI suddenly stops connecting after upgrade, verify the browser origin and proxy setup instead of trying to bypass auth.
+- `openclaw doctor --fix` now migrates legacy cron storage and legacy notify/webhook delivery metadata; after upgrading older cron-heavy installs, run it before assuming cron delivery is broken.
+- Onboarding now has a first-class Ollama flow with `Local` and `Cloud + Local` modes and avoids unnecessary local pulls for cloud-only choices; prefer the wizard when the user wants the easiest local-model setup.
+- OpenCode Go is now a first-class provider during onboarding; treat OpenCode Zen and OpenCode Go as one setup flow with one shared key unless the user explicitly needs provider-level runtime differences.
+- `memorySearch.extraPaths` can now opt into multimodal image/audio indexing with `google/gemini-embedding-2-preview`, configurable embedding dimensions, and automatic reindexing when dimensions change.
+- Discord auto-created threads can now set `autoArchiveDuration`, so thread retention no longer has to stay at the default one hour.
+- `sessions_spawn` with `runtime: "acp"` can now reuse an existing ACPX/Codex conversation via `resumeSessionId` instead of always starting a fresh session.
+
 ## Release Focus (v2026.3.8)
 
 Prioritize these new surfaces when the user is updating, troubleshooting, or documenting a recent OpenClaw setup:
@@ -182,6 +195,14 @@ openclaw doctor
 
 v2026.3.8 improves restart recovery for invalid config, launchd restarts, and timeout-driven shutdowns, so these two commands are now the fastest confirmation path.
 
+If the deployment was upgraded from an older cron setup and scheduled jobs stop notifying correctly, run:
+
+```bash
+openclaw doctor --fix
+```
+
+before assuming the current cron config is wrong.
+
 ### Configuration
 
 Edit config via any method:
@@ -274,6 +295,7 @@ Routing notes from v2026.3.7:
 - ACP bindings for Discord channels and Telegram topics now persist across restarts, so restart-related routing regressions should be diagnosed as binding/config issues first, not assumed to be transient state loss.
 - In Telegram forum groups or DM topics, dedicated topic-level agent routing is now possible; use it when one chat space needs isolated agent state per topic.
 - For Telegram ACP spawning, `--thread here` and `--thread auto` are the newly relevant thread-binding modes.
+- For Discord installs that auto-create threads, `autoArchiveDuration` is now a first-class retention control; use it when threads should stay open for longer than the old one-hour default.
 
 
 ### Model Provider Setup
@@ -308,6 +330,12 @@ Config example:
   },
 }
 ```
+
+Provider notes from `v2026.3.11`:
+
+- Prefer `openclaw onboard` when the user wants Ollama because the wizard now distinguishes `Local` vs `Cloud + Local` flows and skips unnecessary local model pulls.
+- Treat OpenCode Zen and OpenCode Go as a shared onboarding/auth setup, even though runtime provider routing is now split.
+- For memory indexing over file trees, `google/gemini-embedding-2-preview` is now the notable Gemini memory-search model; changing configured output dimensions should be expected to trigger reindexing.
 
 ### Multi-Agent Routing
 
@@ -370,9 +398,11 @@ openclaw security audit --deep          # Live gateway probe
 openclaw security audit --fix           # Auto-fix safe issues
 openclaw secrets reload                 # Re-resolve secret refs
 openclaw secrets audit                  # Scan for plaintext leaks
+```
 
 When enabling non-loopback or remote gateway auth, prefer a SecretRef-backed `gateway.auth.token` over plaintext config.
-```
+
+`v2026.3.11` also hardens browser-origin checks for browser-based Gateway connections. When the Control UI is served through a reverse proxy or trusted-proxy setup, treat unexpected browser connection failures as an origin-validation or proxy-header issue first.
 
 ### Update / Uninstall
 
@@ -381,7 +411,7 @@ When enabling non-loopback or remote gateway auth, prefer a SecretRef-backed `ga
 openclaw backup create
 npm install -g openclaw@latest
 openclaw --version
-openclaw doctor          # Run after update to apply migrations
+openclaw doctor --fix    # Run after update to apply safe migrations, especially cron metadata
 
 # Uninstall
 openclaw uninstall
@@ -428,6 +458,8 @@ Prefer the built-in `pdf` tool for PDF inspection and analysis tasks; it became 
 | `backup verify` fails / manifest mismatch | Corrupt or partial archive | Recreate with `openclaw backup create`, then re-run `openclaw backup verify <archive>` before destructive work |
 | Remote token loads but app cannot use it directly | `gateway.remote.token` is secret-backed or stored in a non-plaintext shape | Preserve existing value unless replacement is intended; if the app needs a raw token, explicitly set a direct token value |
 | `config validate` fails / unresolved SecretRef | Config key is invalid or a required secret ref cannot resolve | Run `openclaw config validate` and `openclaw secrets audit` before restart, then fix the reported path or secret source |
+| Browser Control UI reloads but browser-originated Gateway calls fail | `v2026.3.11` origin validation rejects the current browser origin or proxy path | Verify reverse-proxy/browser origin setup and trusted-proxy configuration; do not work around it by weakening auth |
+| Cron jobs stopped announcing or webhook delivery broke right after upgrade | Legacy cron storage or notify/webhook metadata needs migration | Run `openclaw doctor --fix`, then re-check cron config and delivery target |
 | ACP topic/channel routing disappears after restart | Binding was never persisted or was rebound incorrectly | Re-check ACP binding storage and re-bind the current Discord channel / Telegram topic before debugging runtime routing |
 | `device identity required` | Missing device auth | Ensure client completes connect.challenge flow |
 | No replies from bot | Pairing/allowlist/mention gating | Check `openclaw pairing list`, DM policy, mention patterns |

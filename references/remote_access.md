@@ -208,6 +208,7 @@ tailscale funnel --bg https://127.0.0.1:18789
 
 - The Control UI has full access to the Gateway (config, sessions, tools).
 - Always use auth when exposing non-loopback.
+- `v2026.3.11` also validates browser origins for browser-originated Gateway WebSocket connections even behind trusted proxies; if a reverse-proxied dashboard stops connecting after upgrade, verify origin and proxy headers before weakening auth.
 - HTTPS is recommended for non-local access.
 
 Break-glass note:

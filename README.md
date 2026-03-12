@@ -33,11 +33,13 @@ A production-ready **Agent Skill** that turns Codex, Claude Code, Antigravity, o
 
 ### Synced Release Coverage
 
-This skill currently reflects the key stable OpenClaw changes from early March 2026, especially:
+This skill currently reflects the key stable OpenClaw changes through 2026-03-12, especially:
 
+- `v2026.3.11`: browser-origin validation hardening, `openclaw doctor --fix` cron migration, Ollama Local / Cloud + Local onboarding, Gemini `gemini-embedding-2-preview` memory indexing, Discord `autoArchiveDuration`, ACP `sessions_spawn.resumeSessionId`
 - `v2026.3.8`: `backup create/verify`, `talk.silenceTimeoutMs`, Brave `llm-context`, `openclaw acp --provenance`, `gateway.remote.token`
 - `v2026.3.7`: ContextEngine plugin slot, persistent ACP channel/topic bindings, Telegram topic-level routing, SecretRef support for `gateway.auth.token`, `messages.tts.openai.baseUrl`
 - `v2026.3.2`: `openclaw config validate`, broader SecretRef coverage, first-class `pdf` tool, inline `sessions_spawn` attachments
+- The stable release sequence skips `v2026.3.10` and `v2026.3.9`.
 
 It also covers the most important February 2026 additions:
 

@@ -33,11 +33,12 @@
 
 ### 同步的版本范围
 
-目前这套 Skill 已覆盖 2026 年 3 月上旬的关键稳定版本变更，重点包括：
-
+目前这套 Skill 已覆盖到 2026 年 3 月 12 日前的关键 OpenClaw 稳定版变化，重点包括：
+- `v2026.3.11`：浏览器来源校验加固、`openclaw doctor --fix` 的 cron 迁移、Ollama 本地 / 云端 + 本地向导、Gemini `gemini-embedding-2-preview` 记忆索引、Discord `autoArchiveDuration`、ACP `sessions_spawn.resumeSessionId`
 - `v2026.3.8`：`backup create/verify`、`talk.silenceTimeoutMs`、Brave `llm-context`、`acp --provenance`、`gateway.remote.token`
 - `v2026.3.7`：ContextEngine 插件槽、ACP 持久化频道/话题绑定、Telegram topic 级路由、`gateway.auth.token` 的 SecretRef 支持、`messages.tts.openai.baseUrl`
 - `v2026.3.2`：`openclaw config validate`、更广泛的 SecretRef 覆盖、一等公民 `pdf` 工具、`sessions_spawn` 内联附件
+- GitHub 稳定版序列中没有 `v2026.3.10` 和 `v2026.3.9`。
 
 也覆盖 2026 年 2 月最值得关注的几个新增点：
 

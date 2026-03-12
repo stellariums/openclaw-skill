@@ -137,6 +137,9 @@ Requirements:
 - Enable **Message Content Intent**
 - Invite bot with proper permissions
 
+Recent Discord note:
+- Discord auto-created threads can now set `autoArchiveDuration`; use it when thread retention should be longer than the historic one-hour default.
+
 ## Slack
 
 ```json5

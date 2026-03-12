@@ -401,6 +401,7 @@ Notes:
 - **sessions_send**: Send message to a session
 - **sessions_spawn**: Create a new sub-session
 - `sessions_spawn` gained inline attachment support in v2026.3.2 for subagent runtime use cases; use it when a spawned session needs files without first writing them to a shared chat channel.
+- In `v2026.3.11`, `sessions_spawn` with `runtime: "acp"` also supports `resumeSessionId`, so ACPX/Codex child sessions can resume an existing conversation instead of always starting fresh.
 - Attachment limits and behavior are controlled via `tools.sessions_spawn.attachments`.
 - **session_status**: Current session info
 

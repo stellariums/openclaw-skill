@@ -191,6 +191,7 @@ openclaw config validate --json
 Notes:
 - `openclaw config validate` arrived in v2026.3.2 and is the fastest preflight check before `gateway start` or `gateway restart`.
 - `openclaw backup create` / `verify` arrived in v2026.3.8 and should be the default first step before destructive operations.
+- `v2026.3.11` adds an `openclaw doctor --fix` migration path for legacy cron storage and legacy notify/webhook delivery metadata; use it right after upgrades when cron delivery behavior changed.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured, explicitly set `gateway.auth.mode` to `token` or `password` before upgrading to avoid startup and pairing failures.
 
 ## Operator Commands
@@ -249,8 +250,11 @@ openclaw backup create
 npm install -g openclaw@latest
 openclaw --version
 openclaw config validate
-openclaw doctor              # Apply any migrations
+openclaw doctor --fix        # Apply safe migrations, especially cron delivery metadata
 ```
+Notes:
+- `v2026.3.11` enforces browser-origin validation for browser-originated Gateway WebSocket connections even in trusted-proxy mode; if a reverse-proxied Control UI breaks after update, verify origin/proxy config before changing auth.
+- If old cron jobs stop announcing or webhook delivery changes unexpectedly after update, run `openclaw doctor --fix` before hand-editing cron records.
 
 ### Uninstall
 

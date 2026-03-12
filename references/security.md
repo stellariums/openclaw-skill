@@ -209,6 +209,8 @@ openclaw secrets apply --from <f>   # Apply plan (--dry-run supported)
 
 ## Network Hardening
 
+- `v2026.3.11` enforces browser origin validation for browser-originated Gateway WebSocket connections even in trusted-proxy mode; reverse proxies should preserve the intended browser origin instead of trying to bypass this check.
+
 ```json5
 {
   gateway: {

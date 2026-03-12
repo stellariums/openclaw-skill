@@ -134,6 +134,9 @@ Recent provider notes:
 - `messages.tts.openai.baseUrl` lets OpenClaw route TTS requests to OpenAI-compatible endpoints without changing the default chat provider setup.
 - MiniMax keeps `MiniMax-M2.5-highspeed` as the supported fast tier; avoid depending on removed `MiniMax-M2.5-Lightning` in new configs.
 - `google/gemini-3.1-flash-lite-preview` is a useful lightweight Gemini option in newer releases.
+- `google/gemini-embedding-2-preview` now matters for `memorySearch.extraPaths`; changing configured embedding dimensions should be expected to trigger reindexing.
+- OpenCode Go now has a first-class onboarding path while still sharing one OpenCode key/setup with OpenCode Zen.
+- Newer Ollama onboarding distinguishes `Local` from `Cloud + Local` mode and avoids unnecessary local pulls for cloud-only choices.
 
 ## Model Fallbacks
 
