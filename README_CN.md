@@ -75,6 +75,21 @@ OpenClaw-Skill/
 - `Claude Code`：先克隆仓库，再通过 `/agents` 创建 `openclaw` subagent
 - `Antigravity`：`cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw`
 
+### 让 Agent 帮你安装
+
+如果你不想手动安装，可以把下面这段提示词直接发给助手：
+
+```text
+请帮我为当前使用的助手环境安装 OpenClaw skill，仓库地址是 https://github.com/stellariums/openclaw-skill 。
+
+请按下面的目标路径安装：
+- Codex：macOS / Linux 安装到 ~/.codex/skills/openclaw，Windows 安装到 %USERPROFILE%\.codex\skills\openclaw。
+- Claude Code：macOS / Linux 克隆到 ~/.claude/openclaw-skill，Windows 克隆到 %USERPROFILE%\.claude\openclaw-skill；然后创建或更新 ~/.claude/agents/openclaw.md（Windows 为 %USERPROFILE%\.claude\agents\openclaw.md），让它指向仓库里的 SKILL.md。
+- Antigravity：macOS / Linux 安装到 ~/.gemini/antigravity/skills/openclaw，Windows 安装到 %USERPROFILE%\.gemini\antigravity\skills\openclaw。
+
+安装完成后，请确认安装目录里存在 SKILL.md，明确告诉我你实际使用的路径，并说明是否需要重启助手。
+```
+
 ### 安装后验证
 
 安装完成后，可以直接试这些提示词：

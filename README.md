@@ -76,6 +76,21 @@ If you already know which assistant you use, start here:
 - `Claude Code`: clone the repo, then create an `openclaw` subagent with `/agents`
 - `Antigravity`: `cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw`
 
+### Install via Agent
+
+If you would rather let your assistant install it for you, paste this prompt:
+
+```text
+Please install the OpenClaw skill from https://github.com/stellariums/openclaw-skill for my current assistant environment.
+
+Use these target locations:
+- Codex: clone into ~/.codex/skills/openclaw on macOS/Linux, or %USERPROFILE%\.codex\skills\openclaw on Windows.
+- Claude Code: clone into ~/.claude/openclaw-skill on macOS/Linux, or %USERPROFILE%\.claude\openclaw-skill on Windows, then create or update ~/.claude/agents/openclaw.md (or %USERPROFILE%\.claude\agents\openclaw.md on Windows) so it points to SKILL.md in that repo.
+- Antigravity: copy or clone into ~/.gemini/antigravity/skills/openclaw on macOS/Linux, or %USERPROFILE%\.gemini\antigravity\skills\openclaw on Windows.
+
+After installation, verify that SKILL.md exists in the installed location, tell me exactly which path you used, and tell me whether I need to restart the assistant.
+```
+
 ### Verify Installation
 
 After installing, try one of these prompts:
