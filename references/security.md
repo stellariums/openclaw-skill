@@ -210,6 +210,8 @@ openclaw secrets apply --from <f>   # Apply plan (--dry-run supported)
 ## Network Hardening
 
 - `v2026.3.11` enforces browser origin validation for browser-originated Gateway WebSocket connections even in trusted-proxy mode; reverse proxies should preserve the intended browser origin instead of trying to bypass this check.
+- `v2026.3.12` changes `/pair` and QR setup to short-lived bootstrap tokens; treat stale pairing codes as expected expiry, not as a cue to paste long-lived shared credentials into chat or QR payloads.
+- `v2026.3.12` also disables implicit workspace plugin auto-load. For cloned repositories, require an explicit trust/enable decision before plugin code executes.
 
 ```json5
 {

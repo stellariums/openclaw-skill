@@ -73,6 +73,7 @@ Notes:
 - Unknown `channels.<id>` keys are errors unless a plugin manifest declares the channel id.
 - Plugin config is validated using the JSON Schema in `openclaw.plugin.json` (`configSchema`).
 - If a plugin is disabled, its config is preserved and a warning is emitted.
+- `v2026.3.12` disables implicit workspace plugin auto-load, so cloned repositories should no longer be expected to execute plugin code until the operator explicitly trusts/enables them.
 
 ## Plugin Slots (Exclusive Categories)
 
@@ -208,6 +209,7 @@ A required manifest file for directory plugins:
 ## Safety Notes
 
 - Only install plugins you trust.
+- Do not rely on cloned-repo workspace plugins auto-loading; newer releases require an explicit trust/enable step.
 - Prefer `plugins.allow` allowlists.
 - Restart the Gateway after changes.
 

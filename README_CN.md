@@ -21,19 +21,24 @@
 - 运行、升级或迁移自托管 OpenClaw
 - 新增频道、模型提供商或 Agent 路由规则
 - 排查启动失败、鉴权错误、绑定失效、Gateway 不健康等问题
+- 排查升级后的行为变化，例如 Control UI 反向代理问题、workspace plugin 信任机制和短时配对 token
 - 给 AI 助手装一套可复用的 OpenClaw 知识包，而不是每次都重讲文档
 
 ## 可以直接怎么问
 
-- `Help me diagnose my local OpenClaw setup`
-- `检查我的 OpenClaw 配置是否有问题`
-- `Set up a Telegram bot for OpenClaw`
-- `Why is my Gateway not responding?`
+- `帮我诊断本地 OpenClaw 部署`
+- `帮我给 OpenClaw 配置一个 Telegram Bot`
+- `为什么我的 Gateway 没有响应？`
+- `为什么我放到反向代理后，Control UI 就连不上了？`
+- `为什么升级后 workspace plugin 不再自动加载了？`
+- `为什么现在 /pair 或 QR setup 的配对码过期这么快？`
 - `加固我的 OpenClaw 安全配置`
+- `帮我添加第二个用于工作的 Agent，并隔离 workspace`
 
 ### 同步的版本范围
 
-目前这套 Skill 已覆盖到 2026 年 3 月 12 日前的关键 OpenClaw 稳定版变化，重点包括：
+目前这套 Skill 已覆盖到 2026 年 3 月 13 日前的关键 OpenClaw 稳定版变化，重点包括：
+- `v2026.3.12`：dashboard-v2 控制台界面刷新、`/fast` / TUI / Control UI / ACP 共用 fast mode 开关、Ollama / vLLM / SGLang 的 provider-plugin 架构、`sessions_yield`、Slack `channelData.slack.blocks`、短时 pairing bootstrap token、禁用隐式 workspace plugin 自动加载
 - `v2026.3.11`：浏览器来源校验加固、`openclaw doctor --fix` 的 cron 迁移、Ollama 本地 / 云端 + 本地向导、Gemini `gemini-embedding-2-preview` 记忆索引、Discord `autoArchiveDuration`、ACP `sessions_spawn.resumeSessionId`
 - `v2026.3.8`：`backup create/verify`、`talk.silenceTimeoutMs`、Brave `llm-context`、`acp --provenance`、`gateway.remote.token`
 - `v2026.3.7`：ContextEngine 插件槽、ACP 持久化频道/话题绑定、Telegram topic 级路由、`gateway.auth.token` 的 SecretRef 支持、`messages.tts.openai.baseUrl`
@@ -74,9 +79,9 @@ OpenClaw-Skill/
 
 安装完成后，可以直接试这些提示词：
 
-- `Help me diagnose my local OpenClaw setup`
+- `帮我诊断本地 OpenClaw 部署`
 - `检查我的 OpenClaw 配置是否有问题`
-- `Use the openclaw skill to troubleshoot Gateway startup`
+- `使用 openclaw skill 排查 Gateway 启动问题`
 
 如果助手已经开始按 `SKILL.md` 的流程工作，说明安装成功。
 
@@ -165,9 +170,12 @@ cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw
 
 | 你说的话 | AI 的操作 |
 |---|---|
-| "帮我升级 OpenClaw" | 执行 `npm install -g openclaw@latest`、`openclaw doctor`、重启 Gateway、验证状态 |
+| "帮我升级 OpenClaw" | 执行 `openclaw backup create`、`openclaw update`（或 `npm install -g openclaw@latest`）、`openclaw config validate`、`openclaw doctor --fix`、重启 Gateway、验证状态 |
 | "配置一个 Telegram Bot" | 引导创建 Bot、设置 Token、写入配置、验证连接 |
 | "Gateway 没有响应" | 运行诊断命令梯子：status → logs → doctor → channels probe |
+| "反向代理后 Control UI 连不上了" | 检查浏览器来源校验、代理头和 trusted-proxy 配置，而不是直接削弱鉴权 |
+| "升级后 workspace plugin 不自动加载了" | 核对 `v2026.3.12` 的插件信任行为，改走显式 trust/enable 路径 |
+| "配对码或 QR setup 总是很快过期" | 重新执行 `/pair` 或 `openclaw qr setup`，说明短时 bootstrap token 机制，并避免复用共享凭据 |
 | "加固 OpenClaw 安全配置" | 运行安全审计、应用加固基线、修复权限 |
 | "添加第二个 Agent 用于工作" | 创建 Agent、设置工作区、配置 Bindings、重启 |
 | "EADDRINUSE 错误" | 识别端口冲突，执行 `openclaw gateway --force` 或更换端口 |
@@ -175,37 +183,37 @@ cp -r openclaw-skill ~/.gemini/antigravity/skills/openclaw
 ## 常用命令速查
 
 ```bash
-# 状态与健康检查
+# 最常用
 openclaw status                    # 总体状态
 openclaw gateway status            # Gateway 守护进程状态
+openclaw channels status --probe   # 频道健康检查
 openclaw config validate           # 启动/重启前校验配置
 openclaw doctor                    # 诊断问题
-openclaw channels status --probe   # 频道健康检查
-
-# Gateway 管理
-openclaw gateway install           # 安装为系统服务
-openclaw gateway start/stop/restart
+openclaw security audit            # 检查安全状况
 openclaw backup create             # 变更前创建本地备份
-openclaw backup verify <归档>      # 校验备份
+openclaw --version                 # 查看已安装版本（可能带 git 短哈希）
 
-# 配置管理
+# 升级后必查
+openclaw gateway status --deep     # 深度扫描系统服务与探针状态
+openclaw doctor --fix              # 应用安全修复与迁移
+openclaw backup verify <归档>      # 校验备份
+openclaw security audit --deep     # 深度探测在线 Gateway 安全状态
+openclaw agents bindings           # 查看解析后的 Agent 绑定
+
+# 常见配置命令
+openclaw configure                 # 交互式向导
 openclaw config get <路径>          # 读取配置值
 openclaw config set <路径> <值>     # 设置配置值
-openclaw configure                 # 交互式向导
-
-# 安全
-openclaw security audit            # 检查安全状况
-openclaw security audit --fix      # 自动修复问题
-openclaw secrets reload            # 重新加载密钥引用
-
-# 频道
+openclaw gateway install           # 安装为系统服务
+openclaw gateway start/stop/restart
 openclaw channels add              # 添加频道（向导模式）
 openclaw channels login            # WhatsApp QR 配对
 openclaw channels list             # 显示已配置频道
-
-# 模型
 openclaw models set <模型>          # 设置默认模型
 openclaw models status --probe     # 检查认证状态
+openclaw models auth add           # 交互式添加模型提供商认证
+openclaw secrets reload            # 重新加载密钥引用
+openclaw security audit --fix      # 自动修复问题
 ```
 
 ## 文档来源

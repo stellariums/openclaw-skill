@@ -192,6 +192,7 @@ Notes:
 - `openclaw config validate` arrived in v2026.3.2 and is the fastest preflight check before `gateway start` or `gateway restart`.
 - `openclaw backup create` / `verify` arrived in v2026.3.8 and should be the default first step before destructive operations.
 - `v2026.3.11` adds an `openclaw doctor --fix` migration path for legacy cron storage and legacy notify/webhook delivery metadata; use it right after upgrades when cron delivery behavior changed.
+- `v2026.3.12` changes pairing/bootstrap flows to short-lived tokens and disables implicit workspace plugin auto-load, so old pairing codes and cloned-repo plugin assumptions should be treated as stale after upgrade.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured, explicitly set `gateway.auth.mode` to `token` or `password` before upgrading to avoid startup and pairing failures.
 
 ## Operator Commands
@@ -247,12 +248,19 @@ System requirements: Node 22+, macOS/Linux/Windows.
 
 ```bash
 openclaw backup create
+openclaw update
+openclaw --version
+openclaw config validate
+openclaw doctor --fix        # Apply safe migrations, especially cron delivery metadata
+
+# Fallback for install paths without `openclaw update`
 npm install -g openclaw@latest
 openclaw --version
 openclaw config validate
 openclaw doctor --fix        # Apply safe migrations, especially cron delivery metadata
 ```
 Notes:
+- `v2026.3.12` makes native Windows updates follow the npm update path more reliably and bundles the needed Git behavior internally; prefer `openclaw update` or the npm path before inventing a git-based Windows upgrade flow.
 - `v2026.3.11` enforces browser-origin validation for browser-originated Gateway WebSocket connections even in trusted-proxy mode; if a reverse-proxied Control UI breaks after update, verify origin/proxy config before changing auth.
 - If old cron jobs stop announcing or webhook delivery changes unexpectedly after update, run `openclaw doctor --fix` before hand-editing cron records.
 
@@ -294,6 +302,7 @@ Run `openclaw doctor` immediately after updating. Common breaking changes:
 3. Pairing/device identity state changes
 4. `gateway.auth.mode` now needs to be explicit when both token and password are configured
 5. Validate config with `openclaw config validate` before restarting the daemon
+6. Workspace plugins cloned from repos may now require an explicit trust/enable step instead of implicit auto-load
 
 ### Browser Tool Fails
 

@@ -7,11 +7,22 @@ description: Comprehensive guide for installing, configuring, operating, and tro
 
 OpenClaw is a self-hosted, open-source (MIT) gateway that routes AI agents across WhatsApp, Telegram, Discord, Slack, iMessage, Signal, and 15+ other channels simultaneously. It runs on macOS, Linux, or Windows.
 
+## Release Focus (v2026.3.12)
+
+Prioritize these newest surfaces when the user is updating or troubleshooting a current OpenClaw deployment:
+
+- `v2026.3.12` is the current latest stable release as of 2026-03-13. It follows `v2026.3.11`; `v2026.3.10` and `v2026.3.9` still do not exist on the GitHub releases page.
+- Control UI/dashboard-v2 substantially refreshes the Gateway dashboard with modular overview/chat/config/agent/session views, a command palette, mobile bottom tabs, and richer chat tools. If the user says "the dashboard changed" after upgrade, treat that as expected UI churn first.
+- Fast mode is now a shared session-level toggle across `/fast`, TUI, Control UI, and ACP. OpenAI/Codex and Anthropic map it differently, so verify provider-specific fast-mode defaults and model config before treating latency or cost changes as a bug.
+- Ollama, vLLM, and SGLang now run through the provider-plugin architecture. For discovery, onboarding, or picker regressions on those providers, inspect plugin state/config first instead of assuming the core runtime changed.
+- `sessions_yield` lets orchestrators end the current turn immediately, skip queued tool work, and carry a hidden follow-up payload into the next turn. Prefer it over ad hoc "stop now and resume later" orchestration patterns.
+- Shared reply delivery now supports `channelData.slack.blocks`, so native Slack Block Kit payloads can be sent through the standard Slack reply path.
+- `/pair` and `openclaw qr setup` now issue short-lived bootstrap tokens instead of embedding shared gateway credentials, and implicit workspace plugin auto-load is disabled. If pairing or cloned-repo plugin behavior changes after upgrade, review bootstrap/trust flow before weakening auth or editing plugin code.
+
 ## Release Focus (v2026.3.11)
 
-Prioritize these newer surfaces when the user is updating or troubleshooting a current OpenClaw deployment:
+Also keep these v2026.3.11 changes in mind when the user is updating or troubleshooting a recent OpenClaw deployment:
 
-- `v2026.3.11` is the next stable release after `v2026.3.8`; `v2026.3.10` and `v2026.3.9` do not exist on the GitHub releases page.
 - Gateway/WebSocket now enforces browser origin validation for browser-originated connections even in trusted-proxy mode; if a reverse-proxied Control UI suddenly stops connecting after upgrade, verify the browser origin and proxy setup instead of trying to bypass auth.
 - `openclaw doctor --fix` now migrates legacy cron storage and legacy notify/webhook delivery metadata; after upgrading older cron-heavy installs, run it before assuming cron delivery is broken.
 - Onboarding now has a first-class Ollama flow with `Local` and `Cloud + Local` modes and avoids unnecessary local pulls for cloud-only choices; prefer the wizard when the user wants the easiest local-model setup.
@@ -331,8 +342,10 @@ Config example:
 }
 ```
 
-Provider notes from `v2026.3.11`:
+Provider notes from `v2026.3.12`:
 
+- Fast mode is now a first-class shared toggle across `/fast`, TUI, Control UI, and ACP. If a user reports different latency, pricing, or service-tier behavior after toggling it, verify provider-specific mapping before changing fallback logic.
+- For Ollama, vLLM, and SGLang issues on `v2026.3.12`, inspect provider-plugin onboarding/discovery state first; those providers are no longer purely core-wired.
 - Prefer `openclaw onboard` when the user wants Ollama because the wizard now distinguishes `Local` vs `Cloud + Local` flows and skips unnecessary local model pulls.
 - Treat OpenCode Zen and OpenCode Go as a shared onboarding/auth setup, even though runtime provider routing is now split.
 - For memory indexing over file trees, `google/gemini-embedding-2-preview` is now the notable Gemini memory-search model; changing configured output dimensions should be expected to trigger reindexing.
@@ -357,6 +370,8 @@ v2026.3.7 also makes ACP thread/channel bindings durable across restarts and add
 In `v2026.2.26`, binding management also became a first-class CLI workflow via `openclaw agents bindings|bind|unbind`. Prefer that route when the user wants to promote a channel-only route into an account-scoped route, clean up stale bindings, or avoid hand-editing config during a live routing incident.
 
 When debugging plugin-driven context behavior, check whether a ContextEngine plugin is configured before assuming core compaction is at fault.
+
+For orchestrator/subagent flows on `v2026.3.12`, prefer `sessions_yield` when the user needs to end the current turn immediately and hand hidden follow-up state into the next turn.
 
 ### ACP / Provenance
 
@@ -404,14 +419,25 @@ When enabling non-loopback or remote gateway auth, prefer a SecretRef-backed `ga
 
 `v2026.3.11` also hardens browser-origin checks for browser-based Gateway connections. When the Control UI is served through a reverse proxy or trusted-proxy setup, treat unexpected browser connection failures as an origin-validation or proxy-header issue first.
 
+`v2026.3.12` disables implicit workspace plugin auto-load. If a cloned repository's plugin stops loading after upgrade, require an explicit trust/enable decision instead of trying to restore the old auto-load behavior.
+
+`v2026.3.12` pairing and QR setup now use short-lived bootstrap tokens. Treat expired codes as expected rotation, and do not copy shared gateway credentials into chat or QR flows to mimic older behavior.
+
 ### Update / Uninstall
 
 ```bash
 # Update
 openclaw backup create
+openclaw update
+openclaw --version
+openclaw config validate
+openclaw doctor --fix    # Run after update to apply safe migrations, especially cron metadata
+
+# Fallback if `openclaw update` is unavailable in the current install path
 npm install -g openclaw@latest
 openclaw --version
-openclaw doctor --fix    # Run after update to apply safe migrations, especially cron metadata
+openclaw config validate
+openclaw doctor --fix
 
 # Uninstall
 openclaw uninstall
@@ -460,6 +486,8 @@ Prefer the built-in `pdf` tool for PDF inspection and analysis tasks; it became 
 | `config validate` fails / unresolved SecretRef | Config key is invalid or a required secret ref cannot resolve | Run `openclaw config validate` and `openclaw secrets audit` before restart, then fix the reported path or secret source |
 | Browser Control UI reloads but browser-originated Gateway calls fail | `v2026.3.11` origin validation rejects the current browser origin or proxy path | Verify reverse-proxy/browser origin setup and trusted-proxy configuration; do not work around it by weakening auth |
 | Cron jobs stopped announcing or webhook delivery broke right after upgrade | Legacy cron storage or notify/webhook metadata needs migration | Run `openclaw doctor --fix`, then re-check cron config and delivery target |
+| A cloned repo's workspace plugin no longer loads after upgrade | `v2026.3.12` disables implicit workspace plugin auto-load | Make an explicit trust/enable decision for the workspace plugin; do not assume the old auto-load path still exists |
+| Pair / QR setup code expires quickly or older shared-token pairing flow stopped working | `v2026.3.12` pairing now uses short-lived bootstrap tokens | Re-run `/pair` or `openclaw qr setup` and complete promptly; do not reuse old codes or paste shared gateway credentials into chat |
 | ACP topic/channel routing disappears after restart | Binding was never persisted or was rebound incorrectly | Re-check ACP binding storage and re-bind the current Discord channel / Telegram topic before debugging runtime routing |
 | `device identity required` | Missing device auth | Ensure client completes connect.challenge flow |
 | No replies from bot | Pairing/allowlist/mention gating | Check `openclaw pairing list`, DM policy, mention patterns |

@@ -21,6 +21,7 @@ A production-ready **Agent Skill** that turns Codex, Claude Code, Antigravity, o
 - Running or upgrading a self-hosted OpenClaw instance
 - Adding new channels, providers, or agent routing rules
 - Troubleshooting startup failures, auth errors, broken bindings, and unhealthy Gateway behavior
+- Checking upgrade-era behavior changes such as Control UI proxy issues, workspace plugin trust, and short-lived pairing tokens
 - Giving AI assistants a reusable OpenClaw knowledge pack instead of re-explaining docs each time
 
 ## Example Prompts
@@ -28,13 +29,17 @@ A production-ready **Agent Skill** that turns Codex, Claude Code, Antigravity, o
 - `Help me diagnose my local OpenClaw setup`
 - `Set up a Telegram bot for OpenClaw`
 - `Why is my Gateway not responding?`
+- `Why did Control UI stop connecting after I put it behind a reverse proxy?`
+- `Why did my workspace plugin stop auto-loading after the upgrade?`
+- `Why do my /pair or QR setup codes expire so quickly now?`
 - `Lock down my OpenClaw security configuration`
 - `Add a second agent for work with isolated workspace`
 
 ### Synced Release Coverage
 
-This skill currently reflects the key stable OpenClaw changes through 2026-03-12, especially:
+This skill currently reflects the key stable OpenClaw changes through 2026-03-13, especially:
 
+- `v2026.3.12`: dashboard-v2 Control UI refresh, shared fast-mode toggle across `/fast`/TUI/Control UI/ACP, provider-plugin architecture for Ollama/vLLM/SGLang, `sessions_yield`, Slack `channelData.slack.blocks`, short-lived pairing bootstrap tokens, disabled implicit workspace plugin auto-load
 - `v2026.3.11`: browser-origin validation hardening, `openclaw doctor --fix` cron migration, Ollama Local / Cloud + Local onboarding, Gemini `gemini-embedding-2-preview` memory indexing, Discord `autoArchiveDuration`, ACP `sessions_spawn.resumeSessionId`
 - `v2026.3.8`: `backup create/verify`, `talk.silenceTimeoutMs`, Brave `llm-context`, `openclaw acp --provenance`, `gateway.remote.token`
 - `v2026.3.7`: ContextEngine plugin slot, persistent ACP channel/topic bindings, Telegram topic-level routing, SecretRef support for `gateway.auth.token`, `messages.tts.openai.baseUrl`
@@ -76,7 +81,7 @@ If you already know which assistant you use, start here:
 After installing, try one of these prompts:
 
 - `Help me diagnose my local OpenClaw setup`
-- `检查我的 OpenClaw 配置是否有问题`
+- `Check whether my OpenClaw configuration has any problems`
 - `Use the openclaw skill to troubleshoot Gateway startup`
 
 If the assistant starts using `SKILL.md`, the installation worked.
@@ -166,9 +171,12 @@ Once installed, just ask naturally:
 
 | What You Say | What the AI Does |
 |---|---|
-| "Help me upgrade OpenClaw" | Runs `npm install -g openclaw@latest`, `openclaw doctor`, restarts Gateway, verifies |
+| "Help me upgrade OpenClaw" | Runs `openclaw backup create`, `openclaw update` (or `npm install -g openclaw@latest`), `openclaw config validate`, `openclaw doctor --fix`, restarts Gateway, verifies |
 | "Set up a Telegram bot" | Walks through bot creation, token setup, config, and verification |
 | "Gateway is not responding" | Runs diagnostic command ladder: status → logs → doctor → channels probe |
+| "Control UI stopped connecting behind my reverse proxy" | Checks browser-origin validation, proxy headers, and trusted-proxy config instead of weakening auth |
+| "My workspace plugin stopped loading after upgrade" | Verifies `v2026.3.12` plugin trust behavior and switches to an explicit trust/enable path |
+| "Pairing or QR setup codes keep expiring" | Re-runs `/pair` or `openclaw qr setup`, explains short-lived bootstrap tokens, and avoids reusing shared credentials |
 | "Lock down my OpenClaw security" | Runs security audit, applies hardened baseline, fixes permissions |
 | "Add a second agent for work" | Creates agent, sets up workspace, configures bindings, restarts |
 | "EADDRINUSE error" | Identifies port conflict, runs `openclaw gateway --force` or changes port |
@@ -176,37 +184,37 @@ Once installed, just ask naturally:
 ## Key Commands Quick Reference
 
 ```bash
-# Status & Health
+# Most Used
 openclaw status                    # Overall status
 openclaw gateway status            # Gateway daemon status
+openclaw channels status --probe   # Channel health
 openclaw config validate           # Validate config before start/restart
 openclaw doctor                    # Diagnose issues
-openclaw channels status --probe   # Channel health
-
-# Gateway Management
-openclaw gateway install           # Install as system service
-openclaw gateway start/stop/restart
+openclaw security audit            # Check security posture
 openclaw backup create             # Create local backup before risky changes
-openclaw backup verify <archive>   # Verify backup manifest + payload
+openclaw --version                 # Check installed version (+ git hash when available)
 
-# Configuration
+# Must Check After Upgrades
+openclaw gateway status --deep     # Deep scan including system services
+openclaw doctor --fix              # Apply safe fixes and migrations
+openclaw backup verify <archive>   # Verify backup manifest + payload
+openclaw security audit --deep     # Probe live gateway security posture
+openclaw agents bindings           # Show resolved agent bindings
+
+# Common Setup Commands
+openclaw configure                 # Interactive wizard
 openclaw config get <path>         # Read config value
 openclaw config set <path> <value> # Set config value
-openclaw configure                 # Interactive wizard
-
-# Security
-openclaw security audit            # Check security posture
-openclaw security audit --fix      # Auto-fix issues
-openclaw secrets reload            # Reload secret refs
-
-# Channels
+openclaw gateway install           # Install as system service
+openclaw gateway start/stop/restart
 openclaw channels add              # Add channel (wizard)
 openclaw channels login            # WhatsApp QR pairing
 openclaw channels list             # Show configured channels
-
-# Models
 openclaw models set <model>        # Set default model
 openclaw models status --probe     # Check auth status
+openclaw models auth add           # Add provider auth interactively
+openclaw secrets reload            # Reload secret refs
+openclaw security audit --fix      # Auto-fix issues
 ```
 
 ## Documentation Source
